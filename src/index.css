@@ -1,65 +1,220 @@
+/* --- Global Styles & Dark Theme Variables --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --primary-violet: #8B5CF6; /* Un violeta vibrante para el tema oscuro */
+  --primary-violet-hover: #7C3AED;
+  --lilac-glow: rgba(167, 139, 250, 0.2);
+  --destructive-red: #F43F5E;
+  --destructive-red-hover: #E11D48;
+  --background-dark: #111827; /* Negro azulado oscuro */
+  --card-background: #1F2937; /* Un gris oscuro para las tarjetas */
+  --text-primary: #F9FAFB;   /* Blanco roto */
+  --text-secondary: #9CA3AF; /* Gris claro */
+  --border-color: #374151;
+  --border-radius: 12px; /* Bordes más redondeados para un look suave */
+  --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+}
+
 body {
   margin: 0;
-  background: linear-gradient(180deg, rgb(117, 81, 194), rgb(255, 255, 255));
-  display: flex;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  height: 100vh;
-  width: 100vw;
-  justify-content: center;
-  align-items: center;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-dark);
+  color: var(--text-primary);
 }
 
-main {
+/* --- App Layout (con #root para mayor especificidad) --- */
+#root .app-main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+#root .app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+#root .app-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+#root .user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#root .user-info p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+/* --- Card Sections --- */
+#root .card {
+  background-color: var(--card-background);
+  padding: 2.5rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  margin-bottom: 2.5rem;
+  transition: all 0.3s ease;
+}
+
+#root .card h3 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* --- Form Styles --- */
+#root .task-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+#root .form-group {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+#root .form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+#root .form-group label {
+  margin-bottom: 0.75rem;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+#root .form-input,
+#root .form-textarea {
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#root .form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+#root .form-input:focus,
+#root .form-textarea:focus {
+  outline: none;
+  border-color: var(--primary-violet);
+  box-shadow: 0 0 0 3px var(--lilac-glow);
+}
+
+#root .form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+/* --- Button Styles --- */
+#root .btn {
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
   cursor: pointer;
-  transition: border-color 0.25s;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.2s;
+}
+
+#root .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#root .btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#root .btn-primary {
+  background-color: var(--primary-violet);
   color: white;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+#root .btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-violet-hover);
 }
 
-ul {
-  padding-inline-start: 0;
-  margin-block-start: 0;
-  margin-block-end: 0;
-  list-style-type: none;
+#root .btn-destructive {
+  background-color: transparent;
+  color: var(--destructive-red);
+  border: 1px solid var(--destructive-red);
+}
+
+#root .btn-destructive:hover:not(:disabled) {
+  background-color: var(--destructive-red);
+  color: white;
+}
+
+/* --- Task List Styles --- */
+#root .tasks-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#root .task-item {
   display: flex;
-  flex-direction: column;
-  margin: 8px 0;
-  border: 1px solid black;
-  gap: 1px;
-  background-color: black;
-  border-radius: 8px;
-  overflow: auto;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s;
 }
 
-li {
-  background-color: white;
-  padding: 8px;
+#root .task-item:first-child {
+    padding-top: 0;
 }
 
-li:hover {
-  background: #dadbf9;
+#root .task-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
-a {
-  font-weight: 800;
-  text-decoration: none;
+#root .task-details .description {
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--text-primary);
 }
+
+#root .task-details .meta {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+#root .meta strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
