@@ -33,12 +33,15 @@ specifies that any user authenticated via an API key can "create", "read",
 const schema = a.schema({
   Todo: a
     .model({
-      projectName: a.string(),
-      description: a.string(),
+      projectName: a.string().required(),
+      description: a.string().required(),
       points: a.integer(),
       deliveryDate: a.date(),
     })
-    .authorization((allow) => [allow.publicApiKey()]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated("userPools").to(["read"]),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
