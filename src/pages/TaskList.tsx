@@ -16,6 +16,7 @@ export default function TaskList() {
     deliveryDate: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   useEffect(() => {
     const sub = client.models.Todo.observeQuery().subscribe({
@@ -60,6 +61,8 @@ export default function TaskList() {
         points: 0,
         deliveryDate: "",
       });
+      setShowSuccessPopup(true);
+      setTimeout(() => setShowSuccessPopup(false), 3000); // Ocultar después de 3 segundos
     } catch (error) {
       console.error("Error creating task:", error);
       alert("Hubo un error al guardar la tarea. Intenta de nuevo.");
@@ -76,10 +79,39 @@ export default function TaskList() {
     }
   };
 
-  const totalPoints = tasks.reduce((sum, task) => sum + (task.points || 0), 0);
+  // Filtrar tareas para la semana actual
+  const getWeekTasks = (allTasks: Array<Schema["Todo"]["type"]>) => {
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 = Domingo, 1 = Lunes, ...
+    const diffToMonday = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+    const startOfWeek = new Date(now.setDate(diffToMonday));
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(endOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    return allTasks.filter((task) => {
+      if (!task.deliveryDate) return false;
+      const taskDate = new Date(task.deliveryDate + "T00:00:00");
+      return taskDate >= startOfWeek && taskDate <= endOfWeek;
+    });
+  };
+
+  const weeklyTasks = getWeekTasks(tasks);
+  const weeklyPoints = weeklyTasks.reduce(
+    (sum, task) => sum + (task.points || 0),
+    0
+  );
 
   return (
     <>
+      {showSuccessPopup && (
+        <div className="success-popup show">
+          <span className="checkmark">✔</span> Tarea guardada con éxito
+        </div>
+      )}
+
       <section className="card">
         <h3>Agregar Nueva Tarea</h3>
         <form onSubmit={createTask} className="task-form">
@@ -154,20 +186,20 @@ export default function TaskList() {
             gap: "1rem",
           }}
         >
-          <h3>Mis Tareas Registradas</h3>
+          <h3>Tareas de la Semana</h3>
           <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-            <strong>Total SP: {totalPoints}</strong>
+            <strong>SP de la Semana: {weeklyPoints}</strong>
             <Link to="/semanas" className="btn btn-primary">
-              Semanas
+              Ver Semanas
             </Link>
           </div>
         </div>
 
-        {tasks.length === 0 ? (
-          <p>Aún no has registrado ninguna tarea.</p>
+        {weeklyTasks.length === 0 ? (
+          <p>Aún no has registrado ninguna tarea para esta semana.</p>
         ) : (
           <ul className="tasks-list">
-            {tasks.map((task) => (
+            {weeklyTasks.map((task) => (
               <li key={task.id} className="task-item">
                 <div className="task-details">
                   <p className="description">{task.description}</p>
